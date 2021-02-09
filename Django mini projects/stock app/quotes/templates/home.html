@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Stock App | Home{% endblock %}
+
+{% block content %}
+
+{% if api %}
+  {% if api == "Error" %}
+    There was a problem with your request...
+  {% else %}
+    <h1>{{ api.companyName }}</h1><br><br>
+    <table class="table table-striped">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col"><center>Face</center></th>
+          <th scope="col"><center>Value</center></th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr>
+            <td><center>Price</center></td>
+            <td><center>${{ api.latestPrice }}</center></td>
+          </tr>
+          <tr>
+            <td><center>Previous Close</center></td>
+            <td><center>{{ api.previousClose }}</center></td>
+          </tr>
+          <tr>
+            <td><center>Market Cap</center></td>
+            <td><center>{{ api.marketCap }}</center></td>
+          </tr>
+          <tr>
+            <td><center>YTD Change</center></td>
+            <td><center>{{ api.ytdChange }}</center></td>
+          </tr>
+          <tr>
+            <td><center>52 Week High</center></td>
+            <td><center>{{ api.week52High }}</center></td>
+          </tr>
+          <tr>
+            <td><center>52 Week Low</center></td>
+            <td><center>{{ api.week52Low }}</center></td>
+          </tr>
+      </tbody>
+    </table>
+  {% endif %}
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Stock App | Add Stock{% endblock %}
+
+{% block content %}
+
+<h1>Add Stock...</h1>
+<br>
+<br>
+
+<form action="{% url 'add_stock' %}" class="form-inline my-2 my-lg-0" method="POST">
+  {% csrf_token %}
+  <input name="quote" class="form-control mr-sm-2" type="search" placeholder="Add Stock Quote" aria-label="Search">
+  <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">Add</button>
+</form>
+<br>
+
+<table class="table table-striped table-hover">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col"><center>ID</center></th>
+      <th scope="col"><center>QUOTE</center></th>
+      <th scope="col"><center>DELETE QUOTE</center></th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for item in quote %}
+      <tr>
+        <td><center>ID {{ item.id }}</center></td>
+        <td><center>{{ item.quote }}</center></td>
+        <td><center><a href="{% url 'delete' item.id %}">Delete</a></center></td>
+      </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+
+{% endblock %}

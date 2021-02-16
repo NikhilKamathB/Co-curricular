@@ -14,7 +14,7 @@
 
     <title>{% block title %}{% endblock %}</title>
     <style type="text/css">
-        body { color:white; width: 100vw; height: 100vh; background-image: linear-gradient(to right, #4a4a4a, #646464, #7f7f7f, #9c9c9c, #b9b9b9); } 
+        body { color:white; width: 100vw; height: 100vh;  background-image: linear-gradient(to right, #484848, #585858, #696969, #7a7a7a, #8b8b8b); } 
         .card{
             border-radius: 4px;
             background: #fff;
@@ -45,11 +45,8 @@
       </div>
     </nav>
 
-    <br>
-    <div class="container">
-      {% block content %}
-      {% endblock %}
-    </div>
+    {% block content %}
+    {% endblock %}
 
     <!-- Optional JavaScript; choose one of the two! -->
 

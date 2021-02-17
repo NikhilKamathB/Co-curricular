@@ -13,6 +13,12 @@
     <link rel="stylesheet" href="{% static 'css/home_1.css' %}">
 
     <title>{% block title %}{% endblock %}</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
+
     <style type="text/css">
         body { color:white; width: 100vw; height: 100vh;  background-image: linear-gradient(to right, #484848, #585858, #696969, #7a7a7a, #8b8b8b); } 
         .card{
@@ -31,14 +37,14 @@
   <body>
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <a class="navbar-brand" href="{% url 'home' %}">DJANGO FAB</a>
+      <a class="navbar-brand" href="{% url 'app_1:home' %}">DJANGO FAB</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="{% url 'app_1:home' %}">Home <span class="sr-only">(current)</span></a>
             </li>
           </ul>
         <a class="btn btn-outline-secondary my-2 my-sm-0" href="#">Medium</a>

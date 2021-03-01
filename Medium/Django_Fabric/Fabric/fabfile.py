@@ -90,23 +90,24 @@ def create_venv(ctx):
 def copy_key_file(ctx):
     ctx.run(f"rsync -e 'ssh -i {SSH_FILE}' {GITHUB_KEY_PATH} ubuntu@{HOST}:~/.ssh")
     ctx.run(f"rsync -e 'ssh -i {SSH_FILE}' {GITHUB_KEY_PATH}.pub ubuntu@{HOST}:~/.ssh")
-    
+     
 @task
 def git_config(ctx):
     with CONN.cd("~/.ssh/"):
         CONN.run(f'''cat > config << EOF
-Host github.com-repo-django-fabric
+Host github.com
+  User=ubuntu
   Preferredauthentications publickey
-  IdentityFile=/home/{USER}/.ssh/{GITHUB_KEY_NAME}
+  IdentityFile=~/.ssh/{GITHUB_KEY_NAME}
 AddKeysToAgent yes
 EOF
 ''')
+    CONN.run(f'ssh-keyscan -H github.com >> ~/.ssh/known_hosts')
     
 @task
 def git_clone(ctx):
-    CONN.run(f'ssh-keyscan -H github.com >> ~/.ssh/known_hosts')
-    CONN.run(f'eval "$(ssh-agent -s)" && ssh-add ~/.ssh/{GITHUB_KEY_NAME} && git clone {GIT_REPO}')
-
+    CONN.run(f'git clone {GIT_REPO} && git config --global advice.detachedHead false')
+    
 @task
 def git_fetch(ctx, path=None, branch='master'):
     path = f"~/{PROJECT}/{PROJECT_DJANGO_ROOT}" if path is None else path

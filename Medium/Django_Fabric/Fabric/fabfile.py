@@ -37,7 +37,6 @@ EOF
         CONN.run("wc -c temp.txt")
         CONN.run("rm -rf temp.txt")
 
-
 # Misc actions.
 @task 
 def ls(ctx, folder):
@@ -78,12 +77,6 @@ def install_virtualenv(ctx):
     CONN.sudo("apt-get install python3-pip -y")
     CONN.run("python3 -m pip install virtualenv")
 
-# Application specific.
-@task
-def create_venv(ctx):
-    with CONN.cd(f"~/{PROJECT}"):
-        CONN.run("python3 -m virtualenv venv")
-
 # Git related actions (Before running these functions, deploy keys for your repo).
 # Copy private key -> set git congif file -> clone -> fetch (later).
 @task
@@ -102,6 +95,7 @@ AddKeysToAgent yes
 EOF
 ''')
     CONN.run(f'ssh-keyscan -H github.com >> ~/.ssh/known_hosts')
+    CONN.run("git config --global advice.detachedHead false")
     
 @task
 def git_clone(ctx):
@@ -110,10 +104,15 @@ def git_clone(ctx):
 @task
 def git_fetch(ctx, path=None, branch='master'):
     path = f"~/{PROJECT}/{PROJECT_DJANGO_ROOT}" if path is None else path
-    CONN.run("git config --global advice.detachedHead false")
     with CONN.cd(path):
         CONN.run("git fetch --all")
         CONN.run(f"git checkout -f origin/{branch}")
+
+# Application specific.
+@task
+def create_venv(ctx):
+    with CONN.cd(f"~/{PROJECT}"):
+        CONN.run("python3 -m virtualenv venv")
 
 @task
 def install_requirements(ctx):
@@ -199,6 +198,7 @@ EOF
 def restart_nginx(ctx):
     CONN.sudo("systemctl restart nginx")
 
+# Test functions.
 @task
 def test_server(ctx):
     ctx.run(f"curl -i {HOST}")
@@ -206,3 +206,9 @@ def test_server(ctx):
 @task
 def test_gunicorn_service(ctx):
     CONN.sudo(f"curl --unix-socket /run/{PROJECT}.sock http", user="www-data")
+
+# Custom functions.
+@task
+def set_project(ctx):
+    CONN.run(f"mv Co-curricular/Medium/{PROJECT_DJANGO_ROOT} ~/{PROJECT_DJANGO_ROOT}")
+    CONN.run(f"rm -rf Co-curricular/")

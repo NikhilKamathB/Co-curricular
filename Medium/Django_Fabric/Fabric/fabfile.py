@@ -89,14 +89,13 @@ def create_venv(ctx):
 @task
 def copy_key_file(ctx):
     ctx.run(f"rsync -e 'ssh -i {SSH_FILE}' {GITHUB_KEY_PATH} ubuntu@{HOST}:~/.ssh")
-    ctx.run(f"rsync -e 'ssh -i {SSH_FILE}' {GITHUB_KEY_PATH}.pub ubuntu@{HOST}:~/.ssh")
-     
+        
 @task
 def git_config(ctx):
     with CONN.cd("~/.ssh/"):
         CONN.run(f'''cat > config << EOF
 Host github.com
-  User=ubuntu
+  User={_USER}
   Preferredauthentications publickey
   IdentityFile=~/.ssh/{GITHUB_KEY_NAME}
 AddKeysToAgent yes
@@ -106,11 +105,12 @@ EOF
     
 @task
 def git_clone(ctx):
-    CONN.run(f'git clone {GIT_REPO} && git config --global advice.detachedHead false')
+    CONN.run(f'git clone {GIT_REPO}')
     
 @task
 def git_fetch(ctx, path=None, branch='master'):
     path = f"~/{PROJECT}/{PROJECT_DJANGO_ROOT}" if path is None else path
+    CONN.run("git config --global advice.detachedHead false")
     with CONN.cd(path):
         CONN.run("git fetch --all")
         CONN.run(f"git checkout -f origin/{branch}")

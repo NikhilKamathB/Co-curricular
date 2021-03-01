@@ -1,0 +1,6 @@
+*.env*
+*.vscode*
+db.sqlite3
+*/migrations/*
+*/__pycache__
+!*/migrations/__init__.py

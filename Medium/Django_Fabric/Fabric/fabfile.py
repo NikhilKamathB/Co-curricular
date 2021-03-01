@@ -101,9 +101,7 @@ Host github.com-repo-django-fabric
 AddKeysToAgent yes
 EOF
 ''')
-    # CONN.run(f"yes | ssh -T git@github.com")
-    # CONN.run(f'ssh-keyscan -H github.com >> ~/.ssh/known_hosts && eval "$(ssh-agent -s)" && ssh-add ~/.ssh/{GITHUB_KEY_NAME}')
-
+    
 @task
 def git_clone(ctx):
     CONN.run(f'ssh-keyscan -H github.com >> ~/.ssh/known_hosts')

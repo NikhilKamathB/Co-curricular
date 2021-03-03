@@ -1,3 +1,5 @@
+# Fab file to automate django website deployment.
+
 import os
 from dotenv import load_dotenv
 from fabric.tasks import task

@@ -16,6 +16,7 @@ GITHUB_KEY_PATH = os.getenv("GITHUB_KEY_PATH")
 GITHUB_KEY_NAME = GITHUB_KEY_PATH.split('/')[-1]
 PROJECT_DJANGO_ROOT = os.getenv("PROJECT_DJANGO_ROOT")
 PROJECT_DJANGO_WSGI_APP = os.getenv("PROJECT_DJANGO_WSGI_APP")
+PROJECT_STATIC_ROOT = os.getenv("PROJECT_STATIC_ROOT")
 SERVER_URL = os.getenv('SERVER_URL')
 
 LOCAL_USER = os.getenv("LOCAL_USER_NAME")
@@ -168,32 +169,51 @@ EOF
 @task
 def setup_nginx(ctx):
     CONN.sudo("rm -f /etc/nginx/sites-enabled/default")
+    CONN.sudo(f"rm -f {PROJECT}.conf")
     CONN.run(f'''cat > {PROJECT}.conf << EOF
 upstream {PROJECT}_server {{
-    server unix:/run/{PROJECT}.sock fail_timeout=0;
-  }}
+  server unix:/run/{PROJECT}.sock fail_timeout=0;
+}}
 server {{
-    listen 80 default_server;
+    listen 80;
+    listen 443;
+    
     server_name {SERVER_URL};
-
     client_max_body_size 4G;
-
+    
     access_log /var/log/nginx/{PROJECT}-access.log;
     error_log /var/log/nginx/{PROJECT}-error.log;
-
-    keepalive_timeout 5;
-
-    location @proxy_to_app {{
+    keepalive_timeout 5;    
+    
+    # path for static files
+    root /home/{USER}/{PROJECT}/{PROJECT_DJANGO_ROOT};
+    
+    location / {{
+      # checks for static file, if not found proxy to app
+      try_files \$uri @proxy_to_{PROJECT};
+    }}
+    
+    location @proxy_to_{PROJECT} {{
       proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto \$scheme;
       proxy_set_header Host \$http_host;
+      # we don't want nginx trying to do something clever with
+      # redirects, we set the Host: header above already.
       proxy_redirect off;
       proxy_pass http://{PROJECT}_server;
+    }}    
+    
+    error_page 500 502 503 504 /500.html;
+    
+    location = /500.html {{
+	    root /home/{USER}/{PROJECT}/{PROJECT_DJANGO_ROOT}/{PROJECT_STATIC_ROOT}/500.html;
     }}
 }}
 EOF
 ''')
+    CONN.sudo(f"rm -f /etc/nginx/sites-enabled/{PROJECT}.conf")
     CONN.sudo(f"mv {PROJECT}.conf /etc/nginx/sites-enabled/")
-    CONN.sudo("nginx -t")
+    CONN.sudo(f"nginx -t")
     CONN.sudo("systemctl restart nginx")
 
 @task

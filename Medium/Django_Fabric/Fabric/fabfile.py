@@ -89,6 +89,8 @@ def copy_key_file(ctx):
 @task
 def git_config(ctx):
     with CONN.cd("~/.ssh/"):
+        CONN.run(f"chmod 400 {GITHUB_KEY_NAME}")
+    with CONN.cd("~/.ssh/"):
         CONN.run(f'''cat > config << EOF
 Host github.com
   User={_USER}

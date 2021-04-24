@@ -20,10 +20,10 @@ class Test:
         for step, (images, labels) in enumerate(self.test_loader):
             with torch.no_grad():
                 images, labels = images.to(self.device).float(), labels.to(self.device).float()
-                outputs = model(images)
-                self.pred_set.append(ouputs)
+                outputs = self.model(images)
+                self.pred_set.append(outputs)
                 self.label_set.append(labels)
                 self.image_set.append(images)
-            if step+1 == run:
+            if step+1 == self.test_run:
                 break
         return self.image_set, self.label_set, self.pred_set

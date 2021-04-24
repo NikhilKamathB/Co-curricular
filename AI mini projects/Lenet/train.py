@@ -4,11 +4,12 @@ from datetime import datetime
 
 class Train:
 
-    def __init__(self, model, train_loader, optimizer, criterion, epochs, device, save_path, verbose=True, verbose_step=50):
+    def __init__(self, model, train_loader, optimizer, criterion, scheduler, epochs, device, save_path, verbose=True, verbose_step=50):
         self.model = model
         self.train_loader = train_loader
         self.optimizer = optimizer
         self.criterion = criterion
+        self.scheduler = scheduler
         self.epochs = epochs
         self.device = device
         self.save_path = save_path
@@ -17,9 +18,9 @@ class Train:
         self.start_epoch = 0
         self.train_loss = []
     
-    def save(self, epoch, loss):
+    def save(self):
         torch.save({
-            'epoch': epoch,
+            'epoch': self.epochs,
             'model_state_dict': self.model.state_dict(),
             'optimizer_state_dict': self.optimizer.state_dict(),
             }, self.save_path)
@@ -32,11 +33,13 @@ class Train:
         self.epochs += self.start_epoch 
 
     def train(self):
-        print(f"DEVICE - {self.device} || EPOCHS - {self.epochs} || LEARNING RATE - {self.optimizer.param_groups[0]['lr']}.\n")
+        print(f"\nDEVICE - {self.device} || EPOCHS - {self.epochs} || LEARNING RATE - {self.optimizer.param_groups[0]['lr']}.\n")
         for epoch in range(self.start_epoch, self.epochs):
             start_epoch_time = time.time()
             if self.verbose:
-                print(f'\nEPOCH - {epoch+1}/{self.epochs} || START AT - {datetime.now().strftime('%H:%M:%S %d|%m|%Y')} || LEARNING RATE - {self.optimizer.param_groups[0]['lr']}\n')
+                _start_at = datetime.now().strftime('%H:%M:%S %d|%m|%Y')
+                _lr = self.optimizer.param_groups[0]['lr']
+                print(f'\nEPOCH - {epoch+1}/{self.epochs} || START AT - {_start_at} || LEARNING RATE - {_lr}\n')
             self.model.train()
             running_loss, step_running_loss = 0, 0
             start_step_time = time.time()
@@ -59,5 +62,8 @@ class Train:
                         step_running_loss = 0   
                         start_step_time = time.time()
             self.train_loss.append(running_loss/len(self.train_loader))
+            self.scheduler.step(running_loss/len(self.train_loader))
             if self.verbose:
-                print(f'EPOCH - {epoch+1}/{self.epochs} || TRAIN LOSS - {(running_loss/len(self.train_loader)):.5f} || TIME ELAPSED - {(time.time() - start_epoch_time):.2f}s.\n')
+                print(f'\tEPOCH - {epoch+1}/{self.epochs} || TRAIN LOSS - {(running_loss/len(self.train_loader)):.5f} || TIME ELAPSED - {(time.time() - start_epoch_time):.2f}s.\n')
+        self.save()
+        return self.train_loss

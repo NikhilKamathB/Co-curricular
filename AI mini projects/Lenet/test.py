@@ -1,5 +1,6 @@
 import torch
 
+
 class Test:
 
     def __init__(self, model, test_loader, device, save_path, test_run=20):
@@ -26,4 +27,4 @@ class Test:
                 self.image_set.append(images)
             if step+1 == self.test_run:
                 break
-        return self.image_set, self.label_set, self.pred_set
+        return self.image_set, self.label_set, self.pred_set, self.model

@@ -38,7 +38,7 @@ train_loss = Train(
 ).train()
 
 # %%
-image_set, label_set, pred_set = Test(
+image_set, label_set, pred_set, model = Test(
     model=MODEL,
     test_loader=TEST_LOADER,
     device=DEVICE,

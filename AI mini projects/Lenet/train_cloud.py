@@ -1,10 +1,16 @@
 import time
 import torch
+import torch.optim as optim
 from datetime import datetime
+from azureml.core import Run
+from config import config
+from net import LeNet5
+from data import Data
+
 
 class Train:
 
-    def __init__(self, model, train_loader, optimizer, criterion, scheduler, epochs, device, save_path, verbose=True, verbose_step=50):
+    def __init__(self, model, train_loader, optimizer, criterion, scheduler, epochs, device, verbose=True, verbose_step=50, run=None, misc=None):
         self.model = model
         self.train_loader = train_loader
         self.optimizer = optimizer
@@ -12,28 +18,17 @@ class Train:
         self.scheduler = scheduler
         self.epochs = epochs
         self.device = device
-        self.save_path = save_path
         self.verbose = verbose
         self.verbose_step = verbose_step
+        self.run=run
+        self.misc=misc
         self.start_epoch = 0
         self.train_loss = []
-    
-    def save(self):
-        torch.save({
-            'epoch': self.epochs,
-            'model_state_dict': self.model.state_dict(),
-            'optimizer_state_dict': self.optimizer.state_dict(),
-            }, self.save_path)
-    
-    def load(self):
-        checkpoint = torch.load(self.save_path)
-        self.model.load_state_dict(checkpoint['model_state_dict'])
-        self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
-        self.start_epoch = checkpoint['epoch'] + 1
-        self.epochs += self.start_epoch 
 
     def train(self):
         print(f"\nDEVICE - {self.device} || EPOCHS - {self.epochs} || LEARNING RATE - {self.optimizer.param_groups[0]['lr']}.\n")
+        self.run.log('learning_rate', float(self.misc["learning_rate"]))
+        self.run.log('momentum', float(self.misc["momentum"]))
         self.model.train()
         for epoch in range(self.start_epoch, self.epochs):
             start_epoch_time = time.time()
@@ -64,6 +59,58 @@ class Train:
             self.train_loss.append(running_loss/len(self.train_loader))
             self.scheduler.step(running_loss/len(self.train_loader))
             if self.verbose:
+                self.run.log('loss', running_loss/len(self.train_loader))
                 print(f'\tEPOCH - {epoch+1}/{self.epochs} || TRAIN LOSS - {(running_loss/len(self.train_loader)):.5f} || TIME ELAPSED - {(time.time() - start_epoch_time):.2f}s.\n')
-        self.save()
         return self.train_loss
+
+
+def main(model, train_loader, optimizer, criterion, scheduler, epochs, device, verbose, verbose_step, run, misc):
+    train_loss = Train(
+        model=model,
+        train_loader=train_loader,
+        optimizer=optimizer,
+        criterion=criterion,
+        scheduler=scheduler,
+        epochs=epochs,
+        device=device,
+        verbose=verbose,
+        verbose_step=verbose_step,
+        run=run,
+        misc=misc
+    ).train()
+
+if __name__ == '__main__':
+    # fetching arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--learning_rate', type=float, default=config.lr, help='learning rate')
+    parser.add_argument('--momentum', type=float, default=config.momentum, help='momentum')
+    args = parser.parse_args()
+
+    # initializing parameters
+    DEVICE = torch.device(config.device)
+    _data = Data(train_batch_size=config.train_batch_size, test_batch_size=config.test_batch_size)
+    _data.visualize()
+    TRAIN_LOADER, _ = _data.get_loaders()
+    MODEL = LeNet5().to(DEVICE)
+    OPTIMIZER = optim.SGD(MODEL.parameters(), lr=args.learning_rate, momentum=args.momentum)
+    CRITERION = torch.nn.NLLLoss()
+    SCHEDULER = torch.optim.lr_scheduler.ReduceLROnPlateau(OPTIMIZER, 'min', patience=config.patience)
+    RUN = Run.get_context()
+
+    # running model
+    main(
+        model=MODEL,
+        train_loader=TRAIN_LOADER,
+        optimizer=OPTIMIZER,
+        criterion=CRITERION,
+        scheduler=SCHEDULER,
+        epochs=config.epochs,
+        device=DEVICE,
+        verbose=config.verbose,
+        verbose_step=config.verbose_step,
+        run=RUN,
+        misc={
+            'learning_rate': args.learning_rate,
+            'momentum': args.momentum
+        }
+    )

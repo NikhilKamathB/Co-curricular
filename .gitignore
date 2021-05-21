@@ -6,4 +6,5 @@ db.sqlite3
 *data*
 *.pth*
 *_rough_*
+*.ipynb_checkpoints*
 !*/migrations/__init__.py

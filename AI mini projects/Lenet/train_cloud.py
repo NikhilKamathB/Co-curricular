@@ -1,3 +1,4 @@
+import os
 import time
 import torch
 import string
@@ -29,8 +30,14 @@ class Train:
         self.misc=misc
         self.start_epoch = 0
         self.train_loss = []
-        self.save_path = './outputs/' + ''.join(random.choices(string.ascii_uppercase + string.digits, k = 5)) + '.pth'
-        self.save_log_path = './output_model_logs'
+        self.save_path = './__outputs__/' + ''.join(random.choices(string.ascii_uppercase + string.digits, k = 10)) + '.pth'
+        self.save_log_path = './__output_model_logs__'
+    
+    def make_model_dir(self):
+        if not os.path.exists('./outputs'):
+            os.mkdir('./__outputs__')
+        if not os.path.exists('./__output_model_logs__'):
+            os.mkdir('./__output_model_logs__')
     
     def save(self):
         torch.save({
@@ -43,6 +50,7 @@ class Train:
             mlflow.pytorch.log_model(pytorch_model=self.model, artifact_path=self.save_log_path)
 
     def train(self):
+        self.make_model_dir()
         print(f"\nDEVICE - {self.device} || EPOCHS - {self.epochs} || LEARNING RATE - {self.optimizer.param_groups[0]['lr']}.\n")
         if self.misc["mlflow"]:
             mlflow.log_metric('Learning_rate', float(self.misc["learning_rate"]))
@@ -85,6 +93,7 @@ class Train:
                 else:
                     self.run.log('Loss', running_loss/len(self.train_loader))
                 print(f'\tEPOCH - {epoch+1}/{self.epochs} || TRAIN LOSS - {(running_loss/len(self.train_loader)):.5f} || TIME ELAPSED - {(time.time() - start_epoch_time):.2f}s.\n')
+        self.save()
         return self.train_loss
 
 

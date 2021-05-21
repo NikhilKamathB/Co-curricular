@@ -89,7 +89,6 @@ class Train:
 
 
 def main(model, train_loader, optimizer, criterion, scheduler, epochs, device, verbose, verbose_step, run, misc):
-    print(misc["mlflow"])
     train_loss = Train(
         model=model,
         train_loader=train_loader,
@@ -121,7 +120,7 @@ if __name__ == '__main__':
     OPTIMIZER = optim.SGD(MODEL.parameters(), lr=args.learning_rate, momentum=args.momentum)
     CRITERION = torch.nn.NLLLoss()
     SCHEDULER = torch.optim.lr_scheduler.ReduceLROnPlateau(OPTIMIZER, 'min', patience=config.patience)
-    RUN = Run.get_context() if args.mlflow else None
+    RUN = Run.get_context() if not args.mlflow else None
 
     # running model
     main(

@@ -4,4 +4,11 @@ opencv-python
 torch
 torchvision
 easydict
+python-dotenv
 azureml-defaults
+azureml-core
+azureml-train
+mlflow
+azureml-mlflow
+azureml-pipeline
+azureml-widgets

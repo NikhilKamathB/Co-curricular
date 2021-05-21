@@ -1,0 +1,23 @@
+name: lenet-conda-yaml
+channels:
+  - defaults
+  - conda-forge
+  - pytorch
+dependencies:
+  - python=3.8.2
+  - pip
+  - pip:
+    - numpy
+    - matplotlib
+    - opencv-python
+    - torch
+    - torchvision
+    - easydict
+    - python-dotenv
+    - azureml-defaults
+    - azureml-core
+    - azureml-train
+    - mlflow
+    - azureml-mlflow
+    - azureml-pipeline
+    - azureml-widgets

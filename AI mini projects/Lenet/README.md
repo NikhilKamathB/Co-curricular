@@ -1,3 +1,5 @@
+#### This folder/branch takes us through the end-to-end ML implementation.
+
 ##### Reference Code
 * https://github.com/PyTorch/examples/blob/master/mnist/main.py
 * https://github.com/Azure/MachineLearningNotebooks/tree/master/how-to-use-azureml/ml-frameworks/pytorch/train-hyperparameter-tune-deploy-with-pytorch

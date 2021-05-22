@@ -2,6 +2,8 @@
 * https://github.com/PyTorch/examples/blob/master/mnist/main.py
 * https://github.com/Azure/MachineLearningNotebooks/tree/master/how-to-use-azureml/ml-frameworks/pytorch/train-hyperparameter-tune-deploy-with-pytorch
 * https://github.com/Azure/MachineLearningNotebooks/tree/master/how-to-use-azureml/machine-learning-pipelines/intro-to-pipelines
+* https://github.com/mlflow/mlflow-example
+* https://github.com/shivp950/AzureML_MLflow_demo
 * https://medium.com/@stepanulyanin/implementing-grad-cam-in-pytorch-ea0937c31e82
 
 ##### Architecture

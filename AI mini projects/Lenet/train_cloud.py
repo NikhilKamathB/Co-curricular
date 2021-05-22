@@ -36,8 +36,6 @@ class Train:
     def make_model_dir(self):
         if not os.path.exists('./outputs'):
             os.mkdir('./__outputs__')
-        if not os.path.exists('./__output_model_logs__'):
-            os.mkdir('./__output_model_logs__')
     
     def save(self):
         torch.save({

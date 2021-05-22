@@ -1,0 +1,12 @@
+name: Lenet-mlflow
+conda_env: conda.yaml
+entry_points:
+  main:
+    parameters:
+      learning_rate: {type: float, default: 0.001}
+      momentum: {type: float, default: 0.1}
+      mlflow: {type: bool, default: True}
+    command: "python train_cloud.py \
+	--learning_rate {learning_rate} \
+	--momentum {momentum} \
+	--mlflow {mlflow}"

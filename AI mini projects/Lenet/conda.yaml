@@ -1,11 +1,11 @@
+# conda env export -f conda.yaml
 name: lenet-conda-yaml
 channels:
   - defaults
   - conda-forge
-  - pytorch
+  - anaconda
 dependencies:
-  - python=3.8.2
-  - pip
+  - python=3.8.8
   - pip:
     - numpy
     - matplotlib
@@ -21,3 +21,4 @@ dependencies:
     - azureml-mlflow
     - azureml-pipeline
     - azureml-widgets
+    - azureml-contrib-services

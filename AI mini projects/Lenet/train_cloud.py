@@ -31,7 +31,7 @@ class Train:
         self.start_epoch = 0
         self.train_loss = []
         self.save_path = './__outputs__/' + ''.join(random.choices(string.ascii_uppercase + string.digits, k = 10)) + '.pth'
-        self.save_log_path = './__output_model_logs__'
+        self.save_log_path = 'model'
     
     def make_model_dir(self):
         if not os.path.exists('./outputs'):
@@ -45,7 +45,7 @@ class Train:
             }, self.save_path)
         print(f"Model saved to -> {self.save_path}")
         if self.misc["mlflow"]:
-            mlflow.pytorch.log_model(pytorch_model=self.model, artifact_path=self.save_log_path)
+            mlflow.pytorch.log_model(pytorch_model=self.model, artifact_path=self.save_log_path, conda_env="./conda.yaml",)
 
     def train(self):
         self.make_model_dir()

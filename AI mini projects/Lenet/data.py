@@ -14,7 +14,7 @@ class Data:
         self.download = True
         self.mean, self.std = 0.1307, 0.3081
         self.train_batch_size, self.test_batch_size = 32 if train_batch_size is None else train_batch_size, 32 if test_batch_size is None else test_batch_size
-        self.transforms = self.get_transforms() if transforms is None or not isinstance(trasnforms, dict) else transforms
+        self.transforms = self.get_transforms() if transforms is None or not isinstance(transforms, dict) else transforms
 
     def get_transforms(self):
         TRANSFORMS = {

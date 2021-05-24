@@ -12,3 +12,4 @@ mlflow
 azureml-mlflow
 azureml-pipeline
 azureml-widgets
+azureml-contrib-services

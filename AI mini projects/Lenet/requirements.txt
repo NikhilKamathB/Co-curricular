@@ -9,6 +9,8 @@ azureml-defaults
 azureml-core
 azureml-train
 mlflow
+flask
+flasgger
 azureml-mlflow
 azureml-pipeline
 azureml-widgets

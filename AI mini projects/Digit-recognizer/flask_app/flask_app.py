@@ -1,4 +1,4 @@
-# run-> export PYTHONPATH=.
+# export PYTHONPATH=.:../../.:$PYTHONPATH  ==> run this and from project root directory run this app.
 import torch
 import numpy as np
 from PIL import Image

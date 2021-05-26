@@ -34,9 +34,13 @@ COPY . /home/ubuntu/digit_recognizer
 RUN conda env create -f /home/ubuntu/digit_recognizer/conda.yml
 
 # setting listening port
-EXPOSE 8008
+EXPOSE 800
 
 # running application
 WORKDIR /home/ubuntu/digit_recognizer/
-ENV PYTHONPATH .
-CMD ["/home/ubuntu/miniconda3/envs/venv/bin/python", "flask_app/flask_app.py"]
+ENV PYTHONPATH=.:../../.:$PYTHONPATH
+
+# uncomment the below line to run flask application
+# CMD ["/home/ubuntu/miniconda3/envs/venv/bin/python", "flask_app/flask_app.py"]
+# uncomment the below line to run django application (default)
+CMD ["/home/ubuntu/miniconda3/envs/venv/bin/python", "django_app/digit_recognizer/manage.py", "runserver", "0.0.0.0:8000"]

@@ -20,7 +20,8 @@ dependencies:
     - azureml-train
     - mlflow
     - flask
-    - flasgger
+    - Django
+    - djangorestframework
     - azureml-mlflow
     - azureml-pipeline
     - azureml-widgets

@@ -1,4 +1,9 @@
-#### This folder/branch takes us through the end-to-end ML implementation.
+#### This folder introduces us to the concepets of:
+* Azure ML
+* MLflow
+* Docker
+* Azure DevOps
+* Inferencing using a flask/django web application
 
 ##### Reference Code
 * https://github.com/PyTorch/examples/blob/master/mnist/main.py

@@ -5,7 +5,7 @@ from fabric import Connection
 from invoke import run as local
 load_dotenv()
 
-USER = "ubuntu"
+USER = "nikhilkb98"
 SERVER = os.getenv("SERVER")
 PROJECT = os.getenv("PROJECT")
 PROJECT_DJANGO_ROOT = os.getenv("PROJECT_DJANGO_ROOT")
@@ -38,6 +38,10 @@ The daemon is spawned using systemd.
 @task 
 def ls(ctx, folder):
     c.run(f"ls -lrta {folder}")
+
+@task 
+def rm(ctx, folder):
+    c.run(f"rm -rf {folder}")
 
 @task 
 def cat(ctx, file):

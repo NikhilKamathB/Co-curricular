@@ -8,3 +8,5 @@ python-dotenv
 flask
 Django
 djangorestframework
+fabric==2.6.0
+gunicorn==20.1.0

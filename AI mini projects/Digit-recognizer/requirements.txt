@@ -16,3 +16,5 @@ azureml-mlflow
 azureml-pipeline
 azureml-widgets
 azureml-contrib-services
+fabric==2.6.0
+gunicorn==20.1.0

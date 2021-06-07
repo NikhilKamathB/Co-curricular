@@ -8,3 +8,4 @@ db.sqlite3
 *_rough_*
 *.ipynb_checkpoints*
 !*/migrations/__init__.py
+!*model.pth

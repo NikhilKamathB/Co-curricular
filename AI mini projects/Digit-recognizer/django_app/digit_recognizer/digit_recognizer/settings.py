@@ -9,7 +9,11 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
+import sys
+sys.path.append('.')
+sys.path.append('../../.')
 
+import os
 import torch
 from config import config
 from net import LeNet5
@@ -137,6 +141,11 @@ REST_FRAMEWORK = {
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS=[
+        os.path.join(BASE_DIR, "static"),
+    ]
+STATIC_ROOT=os.path.join(BASE_DIR, "assets")
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

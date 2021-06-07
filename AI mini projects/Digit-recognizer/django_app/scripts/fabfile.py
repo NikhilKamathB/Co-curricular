@@ -56,6 +56,10 @@ def install_nginx(ctx):
     c.sudo("apt install nginx -y")
 
 @task
+def install_git(ctx):
+    c.sudo("apt install git-all -y")
+
+@task
 def git_clone(ctx):
     print(f"git clone {GIT_REPO} {PROJECT}")
     with c.cd(f"~/"):
@@ -82,7 +86,7 @@ def create_venv(ctx):
 def install_requirements(ctx):
     with c.cd(f"~/{PROJECT}/"):
         c.run("source venv/bin/activate")
-        with c.cd(f"~/{PROJECT}/src/{PROJECT_DJANGO_ROOT}/"):
+        with c.cd(f"~/{PROJECT}/{PROJECT_DJANGO_ROOT}/"):
             c.run(f"~/{PROJECT}/venv/bin/pip install -r requirements.txt")
 
 @task

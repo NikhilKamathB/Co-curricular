@@ -2,7 +2,7 @@
 * Azure ML
 * MLflow
 * Docker
-* Azure DevOps
+* Azure and GCP
 * Inferencing using a flask/django web application
 
 ##### Reference Code

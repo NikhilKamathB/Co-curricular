@@ -6,7 +6,7 @@ runtime_config:
 resources:
     cpu: 1
     memory_gb: 4
-    disk_size_gb: 10
+    disk_size_gb: 32
     
 handlers:
 - url: /static

@@ -61,9 +61,7 @@ def install_git(ctx):
 
 @task
 def git_clone(ctx):
-    print(f"git clone {GIT_REPO} {PROJECT}")
     with c.cd(f"~/"):
-        print(f"rm -rf {PROJECT}")
         c.run(f"rm -rf {PROJECT}")
         c.run(f"git clone {GIT_REPO} {PROJECT}", pty=True)
 
@@ -189,10 +187,10 @@ EOF
 
 
 @task 
-def put_env(ctx, PROD_ENV_FILE):
+def put_env(ctx, env):
     """the parameter file will be copied as .env and service is relaunched"""
-    basefile = os.path.basename(PROD_ENV_FILE)
-    local(f"rsync -e 'ssh -i {SSH_FILE}' {PROD_ENV_FILE} ubuntu@{SERVER}:~/{PROJECT}/{PROJECT_DJANGO_ROOT}/")
+    basefile = os.path.basename(env)
+    local(f"rsync -e 'ssh -i {SSH_FILE}' {env} {USER}@{SERVER}:~/{PROJECT}/{PROJECT_DJANGO_ROOT}/")
     if basefile != ".env":#rename to .env
         c.run(f"mv ~/{PROJECT}/{PROJECT_DJANGO_ROOT}/{basefile} ~/{PROJECT}/{PROJECT_DJANGO_ROOT}/.env")
 

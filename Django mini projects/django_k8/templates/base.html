@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en" >
+
+<head>
+
+    <meta charset="utf-8" />
+    <title>{% block title %} {% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="Tolaram Group Device Hub" name="description" />
+    <meta content="Someshwara Software" name="author" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="/static/images/favicon.ico">
+
+    {%  block css%}        
+    {% endblock%}
+    
+</head>
+
+<body>
+
+    {% block content %}
+    {% endblock %}
+
+    {% block javascript %}
+    {% endblock %}
+    
+</body>
+</html>

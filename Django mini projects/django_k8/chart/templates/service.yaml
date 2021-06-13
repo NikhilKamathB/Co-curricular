@@ -1,0 +1,12 @@
+# [START service]
+apiVersion: v1
+kind: Service
+metadata:
+  name: django-k8-service
+spec:
+  selector:
+    app: django-k8
+  ports:
+  - port: 8080
+    targetPort: 8000
+# [END service]

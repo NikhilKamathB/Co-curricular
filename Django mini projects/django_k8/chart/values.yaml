@@ -1,0 +1,2 @@
+deployment:
+  image: asia.gcr.io/project-v1-316310/djangok8:latest

@@ -160,6 +160,8 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Misc.
+# GCP.
 DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
-GS_BUCKET_NAME = 'k8-bucket-v1'
+GS_PROJECT_ID = os.getenv("GS_PROJECT_ID", '')
+GS_BUCKET_NAME = os.getenv("GS_BUCKET_NAME", '')
+GOOGLE_APPLICATION_CREDENTIALS = os.getenv("GOOGLE_APPLICATION_CREDENTIALS", '')

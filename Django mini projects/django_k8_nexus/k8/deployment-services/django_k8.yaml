@@ -20,9 +20,14 @@ spec:
           emptyDir: {}
         - name: cloudsql
           emptyDir: {}
+        - name: storage-creds
+          emptyDir: {}
         - name: cloudsql-oauth-credentials
           secret:
             secretName: cloudsql-oauth-credentials
+        - name: storage-oauth-credentials
+          secret:
+            secretName: storage-oauth-credentials
         - name: ssl-certs
           hostPath:
             path: /etc/ssl/certs
@@ -74,6 +79,51 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 8000
+        volumeMounts:
+          - name: storage-oauth-credentials
+            mountPath: /secrets/storage-creds
+            readOnly: true
+        env:
+            - name: PGDATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: djangoenvs
+                  key: PGDATABASE
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: djangoenvs
+                  key: PGUSER
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: djangoenvs
+                  key: PGPASSWORD
+            - name: PGHOST
+              valueFrom:
+                secretKeyRef:
+                  name: djangoenvs
+                  key: PGHOST
+            - name: PGPORT
+              valueFrom:
+                secretKeyRef:
+                  name: djangoenvs
+                  key: PGPORT
+            - name: GS_PROJECT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: djangoenvs
+                  key: GS_PROJECT_ID
+            - name: GS_BUCKET_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: djangoenvs
+                  key: GS_BUCKET_NAME
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              valueFrom:
+                secretKeyRef:
+                  name: djangoenvs
+                  key: GOOGLE_APPLICATION_CREDENTIALS
         resources:
           limits:
             memory: "512Mi"

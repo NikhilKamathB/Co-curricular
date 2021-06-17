@@ -1,11 +1,13 @@
 *.env*
 *.vscode*
 db.sqlite3
-*migrations*
 *__pycache__*
 *data*
 *.pth*
 *_rough_*
 *.ipynb_checkpoints*
+*migrations*
 !*/migrations/__init__.py
 !*model.pth
+__helm__
+__secrets__

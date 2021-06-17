@@ -1,2 +1,15 @@
 Django==3.2.4
+Pillow==8.2.0 
+numpy==1.20.3
+pandas==1.2.4
+tqdm==4.61.0
+boto3==1.17.87
+requests==2.25.1
+python-dotenv==0.17.1
+google-cloud-storage==1.38.0
+django-import-export==2.5.0
+django-summernote==0.8.11.6
+djangorestframework==3.12.4
+psycopg2-binary==2.8.6
+django-storages==1.11.1
 gunicorn==20.1.0

@@ -1,0 +1,76 @@
+# [START kubernetes_deployment]
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: django-k8
+  labels:
+    app: django-k8
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: django-k8
+  template:
+    metadata:
+      labels:
+        app: django-k8
+    spec:
+      volumes:
+        - name: staticfiles
+          emptyDir: {}
+        - name: django-k8-sites-enabled-configmap
+          configMap:
+            name: django-k8-sites-enabled-configmap
+      initContainers:
+        - name: django-k8-container-init
+          image: asia.gcr.io/project-v1-316310/djangok8v1:latest
+          imagePullPolicy: Always
+          volumeMounts:
+          - name: staticfiles
+            mountPath: /home/ubuntu/app/dist
+          command: [ ../venv/bin/python, manage.py, collectstatic, --noinput ]
+      containers:
+      - name: nginx
+        image: nginx:stable
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 8080
+            protocol: TCP
+        volumeMounts:
+          - name: staticfiles
+            mountPath: /usr/share/nginx/html
+          - name: django-k8-sites-enabled-configmap
+            mountPath: /etc/nginx/nginx.conf
+            subPath: nginx.conf
+        resources:
+          limits:
+            memory: 128Mi
+            cpu: "0.1"
+      - name: django-k8-container
+        image: asia.gcr.io/project-v1-316310/djangok8v1:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+          requests:
+            memory: "128Mi"
+            cpu: "300m"
+# [END kubernetes_deployment]
+---
+# [START service]
+apiVersion: v1
+kind: Service
+metadata:
+  name: django-k8-service
+spec:
+  selector:
+    app: django-k8
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+# [END service]

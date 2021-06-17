@@ -10,7 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import os
 from pathlib import Path
+from dotenv import load_dotenv
+load_dotenv(verbose=True)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,6 +40,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Third parties.
+    'storages',
+
+    # Apps.
+    'scape.apps.ScapeConfig'
 ]
 
 MIDDLEWARE = [
@@ -73,12 +82,29 @@ WSGI_APPLICATION = 'django_k8.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+  'default': {
+      'ENGINE': 'django.db.backends.postgresql_psycopg2',
+      'NAME': os.getenv("PGDATABASE", "postgres"),
+      'USER': os.getenv("PGUSER", "postgres"),
+      'PASSWORD': os.getenv("PGPASSWORD", ""),
+      'HOST': os.getenv("PGHOST", "127.0.0.1"),
+      'PORT': os.getenv("PGPORT", "5499"),
+  },
 }
+
+# admin
+# GMa7PAdpgoveJd9J
+
+# user1
+# WRmED7bqXvyhyiG
 
 
 # Password validation
@@ -118,8 +144,22 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+] #mainly if there are additional static files common to other apps
+STATIC_ROOT = 'dist/static'
+
+
+# Media handling.
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / "media"
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Misc.
+DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+GS_BUCKET_NAME = 'k8-bucket-v1'

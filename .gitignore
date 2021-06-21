@@ -3,11 +3,13 @@
 db.sqlite3
 *__pycache__*
 *data*
+!**data.py**
 *.pth*
 *_rough_*
 *.ipynb_checkpoints*
 *migrations*
 !*/migrations/__init__.py
 !*model.pth
-__helm__
-__secrets__
+**__helm__**
+**__secrets__**
+**__data__**

@@ -1,0 +1,9 @@
+numpy
+matplotlib
+opencv-python
+torch
+torchvision
+easydict
+pillow
+google-cloud-storage
+google-cloud-aiplatform

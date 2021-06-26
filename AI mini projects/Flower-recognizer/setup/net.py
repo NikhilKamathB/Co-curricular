@@ -1,24 +1,14 @@
-import torch.nn.functional as F
+import torchvision
 from torch import nn
 
 
-class LeNet5(nn.Module):
+class Resnet18:
 
     def __init__(self):
-        super(LeNet5, self).__init__()
-        self.conv_layer_1 = nn.Conv2d(in_channels=3, out_channels=6, kernel_size=5)
-        self.sub_1 = nn.AvgPool2d(kernel_size=2, stride=2)
-        self.conv_layer_2 = nn.Conv2d(in_channels=6, out_channels=16, kernel_size=5)
-        self.sub_2 = nn.AvgPool2d(kernel_size=2, stride=2)
-        self.fc_1 = nn.Linear(in_features=5*5*16, out_features=120)
-        self.fc_2 = nn.Linear(in_features=120, out_features=84)
-        self.fc_3 = nn.Linear(in_features=84, out_features=5)
+        pass
 
-    def forward(self, x):
-        x = self.sub_1(F.relu(self.conv_layer_1(x)))
-        x = self.sub_2(F.relu(self.conv_layer_2(x)))
-        x = x.view(-1, 5*5*16)
-        x = F.relu(self.fc_1(x))
-        x = F.relu(self.fc_2(x))
-        x = F.log_softmax(self.fc_3(x), dim=1)
-        return x
+    def get_model(self, pretrained=True, progress=True, num_classes=5):
+        model_ft = torchvision.models.resnet18(pretrained=pretrained, progress=progress) 
+        num_ftrs = model_ft.fc.in_features
+        model_ft.fc = nn.Linear(num_ftrs, num_classes)
+        return model_ft

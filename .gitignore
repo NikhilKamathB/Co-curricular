@@ -13,3 +13,5 @@ db.sqlite3
 **__helm__**
 **__secrets__**
 **__data__**
+**dist**
+**egg**

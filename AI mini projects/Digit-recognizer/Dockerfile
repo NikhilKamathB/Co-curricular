@@ -34,7 +34,7 @@ COPY . /home/ubuntu/digit_recognizer
 RUN conda env create -f /home/ubuntu/digit_recognizer/conda.yml
 
 # setting listening port
-EXPOSE 800
+EXPOSE 8000
 
 # running application
 WORKDIR /home/ubuntu/digit_recognizer/

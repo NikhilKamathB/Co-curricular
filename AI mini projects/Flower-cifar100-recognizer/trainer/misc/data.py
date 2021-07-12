@@ -41,10 +41,12 @@ class FlowersDataset(Dataset):
 
 class Data:
 
-    def __init__(self, data_dir=None, transforms=None, train_batch_size=None, test_batch_size=None):
-        self.resize = 64
+    def __init__(self, resize=64, data_dir=None, data_dir_cifar100=None, transforms=None, train_batch_size=None, test_batch_size=None, is_cifar100=False):
+        self.resize = resize
         self.shuffle = True
         self.data_dir = data_dir
+        self.data_dir_cifar100 = data_dir_cifar100
+        self.is_cifar100 = is_cifar100
         self.stats = ((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
         self.train_batch_size, self.test_batch_size = 32 if train_batch_size is None else train_batch_size, 32 if test_batch_size is None else test_batch_size
         self.transforms = self.get_transforms() if transforms is None or not isinstance(transforms, dict) else transforms
@@ -67,8 +69,12 @@ class Data:
         return TRANSFORMS
 
     def get_loaders(self):
-        train_loader = torch.utils.data.DataLoader(FlowersDataset(self.data_dir, transform=self.transforms['train']), batch_size=self.train_batch_size, shuffle=self.shuffle)
-        test_loader = torch.utils.data.DataLoader(FlowersDataset(self.data_dir, transform=self.transforms['test']), batch_size=self.test_batch_size, shuffle=self.shuffle)
+        if self.is_cifar100:
+            train_loader = torch.utils.data.DataLoader(torchvision.datasets.CIFAR10(self.data_dir_cifar100, train=True, download=True, transform=self.transforms['train']), batch_size=self.train_batch_size, shuffle=self.shuffle)
+            test_loader = torch.utils.data.DataLoader(torchvision.datasets.CIFAR10(self.data_dir_cifar100, train=False, download=True, transform=self.transforms['test']), batch_size=self.test_batch_size, shuffle=self.shuffle)
+        else:
+            train_loader = torch.utils.data.DataLoader(FlowersDataset(self.data_dir, transform=self.transforms['train']), batch_size=self.train_batch_size, shuffle=self.shuffle)
+            test_loader = torch.utils.data.DataLoader(FlowersDataset(self.data_dir, transform=self.transforms['test']), batch_size=self.test_batch_size, shuffle=self.shuffle)
         return train_loader, test_loader
     
     def imshow(self, image):

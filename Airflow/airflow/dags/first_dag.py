@@ -1,6 +1,8 @@
 # https://github.com/soumilshah1995/Learn-Apache-Airflow-in-easy-way-
 
 try:
+    import time
+    import random
     from datetime import timedelta
     from airflow import DAG
     from airflow.operators.python_operator import PythonOperator
@@ -18,6 +20,7 @@ def func_2(**context):
     print(f"Hello world -> Func 2 -> msg: {context['msg']}")
 
 def func_3(**context):
+    time.sleep(random.randint(5, 10))
     print(f"Hello world -> Func 3")
 
 with DAG(
@@ -49,4 +52,5 @@ with DAG(
         provide_context=True
     )
 
-func_1_execute >> func_2_execute >> func_3_execute
+func_1_execute >> func_2_execute
+func_2_execute >> func_3_execute

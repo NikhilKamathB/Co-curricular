@@ -10,7 +10,7 @@ from datetime import datetime
 
 class Train:
 
-    def __init__(self, model, train_loader, optimizer, criterion, scheduler, epochs, device, save_path_dir=None, model_name="fashion_mnist_", verbose=True, verbose_step=50, run=None, misc=None, wandb_needed=False):
+    def __init__(self, model, train_loader, optimizer, criterion, scheduler, epochs, device, save_path_dir=None, model_name="fashion_mnist_", verbose=True, verbose_step=50, run=None, misc=None, wandb_needed=False, display_graphs=False):
         self.model = model
         self.train_loader = train_loader
         self.optimizer = optimizer
@@ -22,9 +22,10 @@ class Train:
         self.model_name = model_name
         self.verbose = verbose
         self.verbose_step = verbose_step
-        self.run=run
-        self.misc=misc
-        self.wandb=wandb_needed
+        self.run = run
+        self.misc = misc
+        self.wandb = wandb_needed
+        self.display_graphs = display_graphs
         self.start_epoch = 0
         self.train_loss = []
         self.train_step_loss = {"x": [], "y": []}
@@ -102,6 +103,7 @@ class Train:
             if self.wandb:
                 wandb.log({"Training Loss": running_loss/len(self.train_loader)}, step=epoch+1)
         self.save()
-        self.plot_loss_curve()
-        self.plot_step_loss_curve()
+        if self.display_graphs:
+            self.plot_loss_curve()
+            self.plot_step_loss_curve()
         return self.train_loss, self.save_path

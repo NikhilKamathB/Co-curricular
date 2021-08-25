@@ -5,23 +5,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-def rename_files(data_dir=None):
-    classes = [fname for fname in os.listdir(data_dir) if '.' not in fname]
-    for classes in classes:
-        for file in os.listdir(data_dir + '/' + classes): 
-            if file.endswith('jpg'):
-                os.rename((data_dir + '/' + classes + '/' + file), (data_dir + '/' + classes + '/' + classes + "_" + file))
-
-def get_csv(data_dir=None, store_path=None):
-    df_dict = {"GCS_FILE_PATH": []}
-    classes = [fname for fname in os.listdir(data_dir) if '.' not in fname]
-    for classes in classes:
-        for file in os.listdir(data_dir + '/' + classes): 
-            if file.endswith('jpg'):
-                df_dict["GCS_FILE_PATH"].append("gs://vertexai_bucket/datasets/flower_photos/" + classes + '/' + file)
-    df = pd.DataFrame.from_dict(df_dict)
-    df.to_csv(store_path)
-
 def display_images(image_set, label_set, pred_set, rows=None, columns=None, wandb_needed=False, wandb_title=None):
     fig = plt.figure(figsize=(17, 25))
     for i in range(1, rows * columns + 1):
@@ -38,7 +21,7 @@ def display_images(image_set, label_set, pred_set, rows=None, columns=None, wand
     if wandb_needed:
         wandb.log({wandb_title: fig})
     plt.show()
-  
+
 def plot_output(image_set, label_set, pred_set, wandb_needed=False, wandb_title=None):
     for i in range(len(image_set)):
         image = image_set[i].to("cpu").numpy()

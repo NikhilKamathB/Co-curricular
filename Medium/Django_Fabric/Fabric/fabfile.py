@@ -208,7 +208,7 @@ def test_nginx(ctx):
 def put_env(ctx, env):
     basefile = os.path.basename(env)
     local(f"rsync -e 'ssh -i {PEM_FILE}' {env} ubuntu@{HOST}:~/{PROJECT}/{PROJECT_DJANGO_ROOT}/")
-    if basefile != ".env": #rename to .env
+    if basefile != ".env": # rename to .env
         CONN.run(f"mv ~/{PROJECT}/{PROJECT_DJANGO_ROOT}/{basefile} ~/{PROJECT}/{PROJECT_DJANGO_ROOT}/.env")
 
 @task

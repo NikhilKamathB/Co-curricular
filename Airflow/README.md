@@ -1,1 +1,1 @@
-#### This folder introduces us to Apache Airflow; a hello world program.
+#### This folder introduces us to Apache Airflow - a hello world program.

@@ -1,0 +1,9 @@
+django
+djangorestframework
+django-rest-auth
+django-import-export
+uritemplate
+swagger-ui
+psycopg2-binary
+django_opentracing
+jaeger-client

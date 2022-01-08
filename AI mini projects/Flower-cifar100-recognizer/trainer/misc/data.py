@@ -70,8 +70,8 @@ class Data:
 
     def get_loaders(self):
         if self.is_cifar100:
-            train_loader = torch.utils.data.DataLoader(torchvision.datasets.CIFAR10(self.data_dir_cifar100, train=True, download=True, transform=self.transforms['train']), batch_size=self.train_batch_size, shuffle=self.shuffle)
-            test_loader = torch.utils.data.DataLoader(torchvision.datasets.CIFAR10(self.data_dir_cifar100, train=False, download=True, transform=self.transforms['test']), batch_size=self.test_batch_size, shuffle=self.shuffle)
+            train_loader = torch.utils.data.DataLoader(torchvision.datasets.CIFAR100(self.data_dir_cifar100, train=True, download=True, transform=self.transforms['train']), batch_size=self.train_batch_size, shuffle=self.shuffle)
+            test_loader = torch.utils.data.DataLoader(torchvision.datasets.CIFAR100(self.data_dir_cifar100, train=False, download=True, transform=self.transforms['test']), batch_size=self.test_batch_size, shuffle=self.shuffle)
         else:
             train_loader = torch.utils.data.DataLoader(FlowersDataset(self.data_dir, transform=self.transforms['train']), batch_size=self.train_batch_size, shuffle=self.shuffle)
             test_loader = torch.utils.data.DataLoader(FlowersDataset(self.data_dir, transform=self.transforms['test']), batch_size=self.test_batch_size, shuffle=self.shuffle)

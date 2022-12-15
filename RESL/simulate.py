@@ -4,29 +4,35 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 t = 1000 # milliseconds
-world = [100, 100]
+world = (100, 100)
 h_list = list(set([_*(np.pi/180) for _ in range(0, 360, 30)] + [_*(np.pi/180) for _ in range(45, 360, 45)]))
 
 min_velocity_magnitude_player, max_velocity_magnitude_player = 0, 1
 min_velocity_magnitude_ego, max_velocity_magnitude_ego = 0, 5
 
-goal_state = [random.random()*world[0], random.random()*world[1]]
+goal_state = (random.random()*world[0], random.random()*world[1])
 goal_aware_sphere_radius = 5
 
-ego_state = [random.random()*world[0], random.random()*world[1]]
+ego_state = (random.random()*world[0], random.random()*world[1])
 ego_heading = random.uniform(0, 2*np.pi)
 ego_aware_sphere_radius = 30
 
 player_aware_sphere_radius = 10
-player_state = [random.random()*world[0], random.random()*world[1]]
+player_state = (random.random()*world[0], random.random()*world[1])
 player_heading = random.uniform(0, 2*np.pi)
 
-def distance(x, y):
+def distance(x:tuple, y:tuple) -> float:
+    '''
+    calculates distance between two points
+    input: x - (a, b)
+           y - (c, d)
+    output: distance between x and y
+    '''
     return ((x[0]-y[0])**2+(x[1]-y[1])**2)**0.5
 
-def movement_model(p_player, h_player):
+def movement_model(p_player:tuple, h_player:float) -> tuple:
     '''
-    define movement model f~or player (not quad copter)
+    defines movement model for player (not quad copter)
     input: p_player - player postion in the real world
            h_player - player heading in the real/local world
     output: tuple of desired position and desired velocity vector
@@ -34,9 +40,9 @@ def movement_model(p_player, h_player):
     x_hat, y_hat = max_velocity_magnitude_player*np.cos(h_player), max_velocity_magnitude_player*np.sin(h_player)
     return ((p_player[0]+(x_hat*t*1e-3), p_player[1]+(y_hat*t*1e-3)), (x_hat, y_hat))
 
-def interaction_model(p_player, v_player, p_ego, v_ego):
+def interaction_model(p_player:tuple, v_player:tuple, p_ego:tuple, v_ego:tuple) -> tuple:
     '''
-    define movement model for player (not quad copter)
+    defines interaction model for player (not quad copter)
     input: p_player - player postion in the real world
            v_player - velocity vector of the player in the local world
            p_ego - ego position in the real world
@@ -64,12 +70,27 @@ def interaction_model(p_player, v_player, p_ego, v_ego):
     next_p_player = sorted(next_p_player, key=lambda x: x[0], reverse=True) 
     return next_p_player[0]
 
-def heuristic(p_player, p_ego):
+def heuristic(p_player:tuple, p_ego:tuple) -> float:
+    '''
+    calculates heuristic for every state of the quad copter
+    input: p_player - player postion in the real world
+           p_ego - ego position in the real world
+    output: a state value estimation
+    '''
     d_player_goal = distance(p_player, goal_state)
     d_player_ego = distance(p_player, p_ego)
     return d_player_goal + d_player_ego
 
-def ego_model_next_state(p_player, v_player, p_ego, v_ego):
+def ego_model_next_state(p_player:tuple, v_player:tuple, p_ego:tuple, v_ego:tuple) -> tuple:
+    '''
+    generates the next state of the quad copter
+    input: p_player - player postion in the real world
+           v_player - velocity vector of the player in the local world
+           p_ego - ego position in the real world
+           v_ego - velocity vector of the ego in the local world
+           a tuple containing player position, player velocity and ego position
+    output:
+    '''
     h_player = np.arctan2(v_player[1], v_player[0])
     v_player_magnitude = np.linalg.norm(v_player)
     if h_player < 0: h_player = 2*np.pi + h_player
@@ -86,13 +107,21 @@ def ego_model_next_state(p_player, v_player, p_ego, v_ego):
                 state = (p_player_dash, [x_hat, y_hat], p_ego_dash)
     return state
 
-def ego_model_tree(depth, state, r_h_ego, r_du_ego):
+def ego_model_tree(depth:int, state:tuple, r_h_ego:list, r_du_ego:list) -> tuple:
+    '''
+    generates the tree of states for the quad copter
+    input: depth - max depth of the tree
+           state - a tuple containing player position, player velocity and ego position
+           r_h_ego - possible range of heading angles
+           r_du_ego - possible duration for volocity execution
+    output: tuple of state value and the best possible velocity command
+    '''
     p_player, v_player, p_ego = state
     if depth == 0: return (heuristic(p_player, p_ego), None)
     best_velocity_duration = None
     v = np.inf
     for h, du in list(itertools.product(r_h_ego, r_du_ego)):
-        v_ego = (5*np.cos(h), 5*np.sin(h))
+        v_ego = (max_velocity_magnitude_ego*np.cos(h), max_velocity_magnitude_ego*np.sin(h))
         score, _ = ego_model_tree(
             depth=depth-1,
             state=ego_model_next_state(p_player, v_player, p_ego, v_ego),
@@ -104,12 +133,13 @@ def ego_model_tree(depth, state, r_h_ego, r_du_ego):
             best_velocity_duration = (v_ego, du)
     return (v, best_velocity_duration)
 
-def ego_model(p_player, p_player_previous, p_ego, depth=3):
+def ego_model(p_player:tuple, p_player_previous:tuple, p_ego:tuple, depth=3):
     '''
     define search space for ego vehicle (quad copter)
     input: p_player - player postion in the real world
+           p_player_previous - previous player postion in the real world
            p_ego - ego position in the real world
-    output: expected velocity of the ego vehicle with duration
+    output: tuple of best position and best velocity vector
     '''
     v_player = ((p_player[0]-p_player_previous[0])/t*1e-3, (p_player[1]-p_player_previous[1])/t*1e-3)
     r_du_ego = [1]
@@ -123,6 +153,9 @@ def ego_model(p_player, p_player_previous, p_ego, depth=3):
     return ((p_ego[0]+(v_ego[0]*t*1e-3), p_ego[1]+(v_ego[1]*t*1e-3)), v_ego)
 
 def simulate():
+    '''
+    runs the simulation
+    '''
     p_player_plot = []
     v_player_plot = []
     p_player, p_heading = player_state, player_heading

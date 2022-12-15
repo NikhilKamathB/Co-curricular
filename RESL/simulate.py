@@ -11,7 +11,7 @@ min_velocity_magnitude_player, max_velocity_magnitude_player = 0, 1
 min_velocity_magnitude_ego, max_velocity_magnitude_ego = 0, 5
 
 goal_state = (random.random()*world[0], random.random()*world[1])
-goal_aware_sphere_radius = 5
+goal_aware_sphere_radius = 2.5
 
 ego_state = (random.random()*world[0], random.random()*world[1])
 ego_heading = random.uniform(0, 2*np.pi)

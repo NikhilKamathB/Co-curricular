@@ -17,3 +17,4 @@ db.sqlite3
 **.csv**
 **wandb**
 **.zip**
+**.DS_Store**

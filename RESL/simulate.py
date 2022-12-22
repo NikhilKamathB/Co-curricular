@@ -153,11 +153,11 @@ def simulate():
     '''
     p_player_plot = []
     v_player_plot = []
-    # p_player, p_heading = player_state, player_heading
-    # p_ego, v_ego = ego_state, [np.cos(ego_heading), np.sin(ego_heading)]
-    goal_state = (90, 90)
-    p_player, p_heading = [50, 50], np.pi
-    p_ego, v_ego = [90, 90], [np.cos(0), np.sin(0)]
+    p_player, p_heading = player_state, player_heading
+    p_ego, v_ego = ego_state, [np.cos(ego_heading), np.sin(ego_heading)]
+    # goal_state = (80, 80)
+    # p_player, p_heading = [50, 50], np.pi
+    # p_ego, v_ego = [80, 80], [np.cos(0), np.sin(0)]
     reached_goal_state = False
     ctr = 0
     try:
@@ -173,7 +173,7 @@ def simulate():
             if ((p_player[0]-goal_state[0])**2 + (p_player[1]-goal_state[1])**2)**0.5 < goal_aware_sphere_radius:
                 reached_goal_state=True
             print(f'Step {ctr}: Distance to goal state:\tFrom player = {distance(p_player, goal_state)} with velocity vector = {v_player}\tFrom ego = {distance(p_ego, goal_state)} with velocity vector = {v_ego}')
-    except KeyboardInterrupt as E:
+    finally:
         x = np.asarray(p_player_plot)
         y = np.asarray(v_player_plot)
         plt.figure(figsize=(13, 7))
@@ -186,18 +186,6 @@ def simulate():
         plt.plot(x[-1,0], x[-1, 1], marker="*", markersize=10,markerfacecolor="red")
         plt.plot(y[-1,0], y[-1, 1], marker="*", markersize=10,markerfacecolor="red")
         plt.show()
-    x = np.asarray(p_player_plot)
-    y = np.asarray(v_player_plot)
-    plt.figure(figsize=(13, 7))
-    plt.xlim(0, world[0])
-    plt.ylim(0, world[0])
-    plt.grid()
-    plt.plot(x[:, 0], x[:, 1], '--bo', label='line with marker')
-    plt.plot(y[:, 0], y[:, 1], '--ro', label='line with marker')
-    plt.plot(goal_state[0], goal_state[1], marker="o", markersize=10,markerfacecolor="green")
-    plt.plot(x[-1,0], x[-1, 1], marker="*", markersize=10,markerfacecolor="red")
-    plt.plot(y[-1,0], y[-1, 1], marker="*", markersize=10,markerfacecolor="red")
-    plt.show()
 
 
 if __name__ == '__main__':

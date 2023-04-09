@@ -1,0 +1,17 @@
+{
+    "manifest_version": 3,
+    "name": "ChatGPT",
+    "description": "ChatGPT",
+    "version": "1.0.1",
+    "permissions": [
+        "contextMenus",
+        "storage"
+    ],
+    "background": {
+        "type": "module",
+        "service_worker": "index.js"
+    },
+    "options_ui": {
+        "page": "index.html"
+    }
+}

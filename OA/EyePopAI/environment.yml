@@ -1,0 +1,5 @@
+name: eye-pop-ai
+channels:
+  - defaults
+dependencies:
+  - python=3.12

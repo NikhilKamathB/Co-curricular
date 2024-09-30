@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "eyepopai"
+version = "0.1.0"
+description = "EyePop AI assessment"
+authors = ["Nikhil Bola Kamath <nikhilkb98@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+
+[tool.poetry.group.base.dependencies]
+numpy = "^2.1.1"
+pandas = "^2.2.3"
+opencv-python = "^4.10.0.84"
+eyepop = "^1.4.1"
+pytest = "^8.3.3"
+textual = "^0.81.0"
+textual-dev = "^1.6.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

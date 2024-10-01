@@ -23,10 +23,19 @@ Workspace {
 
     FileInputQuery {
 
-        height: 0.75fr;
+        height: 1fr;
         margin: 1 0 0 0;
+        align: center middle;
 
         Input {
+            width: 1fr;
+            border: solid ansi_bright_green;
+        }
+
+        Select {
+            width: 0.25fr;
+        }
+        SelectCurrent {
             border: solid ansi_bright_green;
         }
 

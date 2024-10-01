@@ -2,6 +2,7 @@
 # Define workspace here.
 ####################################################################################################
 
+from textual import on
 from textual.app import ComposeResult
 from textual.css.query import NoMatches
 from textual.widgets import Static, Button, Input
@@ -60,9 +61,11 @@ class Workspace(Static):
             ),
             FileInputQuery()
         )
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "workspace_clear_button":
-            self._reset()
-        elif event.button.id == "workspace_submit_button":
-            self._submit()
+    
+    @on(Button.Pressed, "#workspace_submit_button")
+    def submit_button_pressed(self, event: Button.Pressed) -> None:
+        self._submit()
+    
+    @on(Button.Pressed, "#workspace_clear_button")
+    def clear_button_pressed(self, event: Button.Pressed) -> None:
+        self._reset()

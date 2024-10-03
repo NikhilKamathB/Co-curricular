@@ -15,5 +15,6 @@ Co-curricular
 |- Django mini projects: This covers intro to kubernetes, elastic search, etc. with django framework.
 |- IOS: "hello world" IOS projects using swift.
 |- Medium: Any code coressponding to the posts on Medium goes here.
+|- OA: Online assessment tasks goes here.
 |- RESL: Robotics embedded system labs evaluation task.
 ```

@@ -3,13 +3,18 @@
 # How to run the application: `python -m main`
 ####################################################################################################
 
+from dotenv import load_dotenv
 from textual.app import App, ComposeResult
 from textual.widgets import Header, Footer
-from src.components.workspace import Workspace
+from eyepopai.components.workspace import Workspace
+
+
+# Load environment variables
+load_dotenv()
 
 
 class EyePopAI(App):
-     
+
     """
     EyePopAI is the drive class for the application.
     This application allows you to process a video feed and give statistics about differnet objects in the video feed.
@@ -23,5 +28,11 @@ class EyePopAI(App):
         yield Workspace()
         yield Footer()
 
-if __name__ == "__main__":
+def main():
     EyePopAI().run()
+
+
+if __name__ == "__main__":
+    # Sample image: `../data/images/sample.jpeg`
+    # Sample video: `../data/videos/sample.mp4`
+    main()

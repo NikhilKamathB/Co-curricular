@@ -2,10 +2,9 @@
 # Define all types of query widgets here.
 ####################################################################################################
 
-from textual import on
 from textual.app import ComposeResult
+from textual.widgets import Static, Button, Input
 from textual.containers import Horizontal, Vertical
-from textual.widgets import Static, Button, Input, Select
 
 
 class FileInputQuery(Static):
@@ -21,12 +20,10 @@ class FileInputQuery(Static):
         self.selected_upload_type = self.SELECTED_UPLOAD_TYPE
 
     def compose(self) -> ComposeResult:
-        self.workspace_query_area = Input(id="workspace_query_area", placeholder="./data/videos/demo.mp4")
-        self.upload_type_select = Select(id="upload_type_select", options=self.UPLOAD_TYPE_OPTIONS, allow_blank=False, value=self.SELECTED_UPLOAD_TYPE)
+        self.workspace_query_area = Input(id="workspace_query_area", placeholder="../data/videos/demo.mp4")
         yield Vertical(
             Horizontal(
                 self.workspace_query_area,
-                self.upload_type_select,
             ),
             Horizontal(
                 Button("Clear", id="workspace_clear_button"),
@@ -36,7 +33,3 @@ class FileInputQuery(Static):
     
     def on_mount(self) -> None:
         self.workspace_query_area.border_title = self.BORDER_TITLE
-    
-    @on(Select.Changed, "#upload_type_select")
-    def select_changed(self, event: Select.Changed) -> None:
-        self.selected_upload_type = event.value

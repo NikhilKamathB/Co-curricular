@@ -19,6 +19,17 @@ Workspace {
             padding: 1 3;
             border: solid ansi_bright_green;
         }
+
+        VerticalScroll {
+            align: center middle;
+            border: none;
+
+            BaseAnalyticsTable, PandasDataFrameTable {
+                width: auto;
+                max-width: 75%;
+                border: solid ansi_bright_green;
+            }
+        }
     }
 
     FileInputQuery {
@@ -29,13 +40,6 @@ Workspace {
 
         Input {
             width: 1fr;
-            border: solid ansi_bright_green;
-        }
-
-        Select {
-            width: 0.25fr;
-        }
-        SelectCurrent {
             border: solid ansi_bright_green;
         }
 

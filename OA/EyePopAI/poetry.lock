@@ -639,13 +639,13 @@ test = ["pytest (>=6)"]
 
 [[package]]
 name = "eyepop"
-version = "1.4.1"
+version = "1.4.2"
 description = "EyePop.ai Python SDK"
 optional = false
 python-versions = "*"
 files = [
-    {file = "eyepop-1.4.1-py3-none-any.whl", hash = "sha256:4bdcf097021de31e1c940c4142e55de30d99f70a2994b0cb1cb46c34074a821e"},
-    {file = "eyepop-1.4.1.tar.gz", hash = "sha256:bd81195131c7001abcdadcf039f0477f672ac82ec3c0b9434eb5955b3d45556e"},
+    {file = "eyepop-1.4.2-py3-none-any.whl", hash = "sha256:7331cf0e7fdfcc9e732c3aede11a4632a220bbe900b4cdf8996e75e605232b85"},
+    {file = "eyepop-1.4.2.tar.gz", hash = "sha256:712ef3738f0160b617c48e183aee9d0476e0445b0e489be4093897376933ab59"},
 ]
 
 [package.dependencies]
@@ -1623,10 +1623,10 @@ files = [
 
 [package.dependencies]
 numpy = [
-    {version = ">=1.26.0", markers = "python_version >= \"3.12\""},
-    {version = ">=1.23.5", markers = "python_version >= \"3.11\" and python_version < \"3.12\""},
     {version = ">=1.21.4", markers = "python_version >= \"3.10\" and platform_system == \"Darwin\" and python_version < \"3.11\""},
     {version = ">=1.21.2", markers = "platform_system != \"Darwin\" and python_version >= \"3.10\" and python_version < \"3.11\""},
+    {version = ">=1.23.5", markers = "python_version >= \"3.11\" and python_version < \"3.12\""},
+    {version = ">=1.26.0", markers = "python_version >= \"3.12\""},
 ]
 
 [[package]]
@@ -1693,9 +1693,9 @@ files = [
 
 [package.dependencies]
 numpy = [
-    {version = ">=1.26.0", markers = "python_version >= \"3.12\""},
-    {version = ">=1.23.2", markers = "python_version == \"3.11\""},
     {version = ">=1.22.4", markers = "python_version < \"3.11\""},
+    {version = ">=1.23.2", markers = "python_version == \"3.11\""},
+    {version = ">=1.26.0", markers = "python_version >= \"3.12\""},
 ]
 python-dateutil = ">=2.8.2"
 pytz = ">=2020.1"
@@ -1894,8 +1894,8 @@ files = [
 annotated-types = ">=0.6.0"
 pydantic-core = "2.23.4"
 typing-extensions = [
-    {version = ">=4.12.2", markers = "python_version >= \"3.13\""},
     {version = ">=4.6.1", markers = "python_version < \"3.13\""},
+    {version = ">=4.12.2", markers = "python_version >= \"3.13\""},
 ]
 
 [package.extras]
@@ -2077,6 +2077,20 @@ files = [
 
 [package.dependencies]
 six = ">=1.5"
+
+[[package]]
+name = "python-dotenv"
+version = "1.0.1"
+description = "Read key-value pairs from a .env file and set them as environment variables"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "python-dotenv-1.0.1.tar.gz", hash = "sha256:e324ee90a023d808f1959c46bcbc04446a10ced277783dc6ee09987c37ec10ca"},
+    {file = "python_dotenv-1.0.1-py3-none-any.whl", hash = "sha256:f7b63ef50f1b690dddf550d03497b66d609393b40b564ed0d674909a68ebf16a"},
+]
+
+[package.extras]
+cli = ["click (>=5.0)"]
 
 [[package]]
 name = "pytz"
@@ -2561,4 +2575,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "f47d56922a93480e0c6443001a766a73c5e13fed719817b9e62c8f4ae0eedfc2"
+content-hash = "ee664876b4f971a1305804c9e3a5c05749b57540ee76dd459429852ec517b3c8"

@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "kaedim"
+version = "0.1.0"
+description = ""
+authors = ["Nikhil Bola Kamath <nikhilkb98@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pydantic = "^2.9.2"
+langchain = "^0.3.1"
+langchain-community = "^0.3.1"
+langchain-openai = "^0.2.1"
+python-dotenv = "^1.0.1"
+pillow = "^10.4.0"
+trimesh = "^4.4.9"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -3,11 +3,19 @@
 ####################################################################################################
 
 import os
+import logging
 from functools import wraps
 from typing import Callable, Tuple, Any
 
 
+logger = logging.getLogger(__name__)
+
+
 def validate_file(allowed_types: Tuple[str, ...]) -> Callable:
+    """
+    Decorator to validate the file type.
+    """
+    logger.info("validate_file: Validating file type.")
     def decorator(func: Callable) -> Callable:
         @wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Any:

@@ -3,12 +3,16 @@
 ####################################################################################################
 
 import os
+import logging
 from typing import Tuple
 from eyepop import EyePopSdk
 from eyepopai.core.decorators import validate_file
 from eyepopai.core.constants import IMAGE_TYPES, VIDEO_TYPES
 from eyepopai.core.validators import ImageProcessModel, VideoProcessModel
 from eyepopai.core.utils import draw_on_image, draw_on_video, get_image_stats, get_video_stats, get_detailed_video_stats
+
+
+logger = logging.getLogger(__name__)
 
 
 class EyePop:
@@ -20,10 +24,13 @@ class EyePop:
         2. Process video using the eyepop sdk
     """
 
+    __LOG_PREFIX__ = "EyePop"
+
     def __init__(self) -> None:
         """
         Initialize the EyePop class.
         """
+        logger.info(f"{self.__LOG_PREFIX__}: Initializing EyePop class.")
         self.endpoint = EyePopSdk.endpoint(
             pop_id=os.getenv("EYEPOP_POP_ID"),
             secret_key=os.getenv("EYEPOP_SECRET_KEY")
@@ -38,6 +45,7 @@ class EyePop:
         Returns:
             Tuple[str, dict]: The path to the processed image and the image analytics.
         """
+        logger.info(f"{self.__LOG_PREFIX__}: Processing image.")
         with self.endpoint as pop:
             result = pop.upload(file_path).predict()
             image_process_result = ImageProcessModel(**result)
@@ -54,6 +62,7 @@ class EyePop:
         Returns:
             Tuple[str, dict, dict]: The path to the processed video, the video analytics and the detailed video analytics.
         """
+        logger.info(f"{self.__LOG_PREFIX__}: Processing video.")
         with self.endpoint as pop:
             job = pop.upload(file_path)
             results = []

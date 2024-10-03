@@ -2,6 +2,7 @@
 # Define workspace here.
 ####################################################################################################
 
+import logging
 import pandas as pd
 from textual import on
 from typing import Tuple
@@ -16,21 +17,28 @@ from eyepopai.core.utils import get_file_type, view_video, view_image
 from eyepopai.components.table import BaseAnalyticsTable, PandasDataFrameTable
 
 
+logger = logging.getLogger(__name__)
+
+
 class Workspace(Static):
 
     """A workspace widget that serves as the main work area interface."""
 
     BORDER_TITLE = "Workspace"
-    INITIAL_DISPLAY_TEXT = "Your analysis will appear here.\nProcessing can take some time...\nYou can hit `q` to close any preview windows that pop up.\nTo close the CLI hit `ctrl+c`."
+    INITIAL_DISPLAY_TEXT = "Your analysis will appear here.\nProcessing can take some time...\nYou can hit `q` to close any preview windows that pop up.\nTo close the CLI hit `ctrl+c`.\nAll logs can be found in `/tmp/eyepopai/logs`."
     INITIAL_DISPLAY_WIDGET = Static(
         INITIAL_DISPLAY_TEXT, id="workspace_inital_display")
-    
+    __LOG_PREFIX__ = "Workspace"
+
     def __init__(self, *args, **kwargs) -> None:
+        """Initialize the workspace."""
+        logger.info(f"{self.__LOG_PREFIX__}: Initializing workspace.")
         super().__init__(*args, **kwargs)
         self.pop = pop()
 
     def _clear_and_return_msg_text_area(self) -> str:
         """Clear the text area and return the text in that area."""
+        logger.info(f"{self.__LOG_PREFIX__}: Clearing text area and returning the text in that area.")
         workspace_query_area = self.query_one("#workspace_query_area", Input)
         value = workspace_query_area.value
         workspace_query_area.value = ""
@@ -44,6 +52,7 @@ class Workspace(Static):
             Returns:
                 Tuple[dict, pd.DataFrame]: A tuple containing the stats and the detailed stats for frames.
         """
+        logger.info(f"{self.__LOG_PREFIX__}: Processing file.")
         file_type = get_file_type(file_path)
         pd_stats = None
         if file_type == FileTypes.VIDEO.value:
@@ -58,6 +67,7 @@ class Workspace(Static):
 
     def _submit(self) -> None:
         """Submit a workspace query."""
+        logger.info(f"{self.__LOG_PREFIX__}: Submitting workspace query.")
         user_input = self._clear_and_return_msg_text_area()
         if not user_input:
             return
@@ -76,15 +86,19 @@ class Workspace(Static):
                     BaseAnalyticsTable(table_data=stats),
                 )
         except FileNotFoundError as fnfe:
+            logger.error(f"{self.__LOG_PREFIX__}: File not found error: {fnfe}")
             res = Static(str(fnfe))
         except RuntimeError as re:
+            logger.error(f"{self.__LOG_PREFIX__}: Runtime error: {re}")
             res = Static(str(re))
         except Exception as e:
+            logger.error(f"{self.__LOG_PREFIX__}: Exception: {e}")
             res = Static(str(e))
         workspace_display_area.mount(res)
     
     def _reset(self) -> None:
         """Reset the workspace."""
+        logger.info(f"{self.__LOG_PREFIX__}: Resetting workspace.")
         try:
             _ = self.query_one("#workspace_inital_display", Static)
             self._clear_and_return_msg_text_area()
@@ -98,6 +112,7 @@ class Workspace(Static):
         workspace_display_area.mount(self.INITIAL_DISPLAY_WIDGET)
 
     def compose(self) -> ComposeResult:
+        logger.info(f"{self.__LOG_PREFIX__}: Composing workspace.")
         yield Vertical(
             VerticalScroll(
                 self.INITIAL_DISPLAY_WIDGET,
@@ -108,8 +123,10 @@ class Workspace(Static):
         
     @on(Button.Pressed, "#workspace_submit_button")
     def submit_button_pressed(self, event: Button.Pressed) -> None:
+        logger.info(f"{self.__LOG_PREFIX__}: Submit button pressed.")
         self._submit()
     
     @on(Button.Pressed, "#workspace_clear_button")
     def clear_button_pressed(self, event: Button.Pressed) -> None:
+        logger.info(f"{self.__LOG_PREFIX__}: Clear button pressed.")
         self._reset()

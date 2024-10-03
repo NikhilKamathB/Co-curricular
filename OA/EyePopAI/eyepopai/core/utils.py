@@ -4,12 +4,16 @@
 
 import os
 import cv2
+import logging
 import numpy as np
 import pandas as pd
 from typing import List
 from eyepopai.core.decorators import validate_file
 from eyepopai.core.constants import VIDEO_TYPES, IMAGE_TYPES, FileTypes
 from eyepopai.core.validators import BaseObjectModel, ImageProcessModel, VideoProcessModel
+
+
+logger = logging.getLogger(__name__)
 
 
 @validate_file(VIDEO_TYPES)
@@ -22,6 +26,7 @@ def view_video(file_path: str, title: str = "Video") -> None:
         Returns:
             None
     """
+    logger.info("view_video: Viewing video.")
     video = cv2.VideoCapture(file_path)
     if not video.isOpened():
         raise RuntimeError(f"Failed to open video: {file_path}")
@@ -48,6 +53,7 @@ def view_image(file_path: str, title: str = "Image") -> None:
         Returns:
             None
     """
+    logger.info("view_image: Viewing image.")
     img = cv2.imread(file_path)
     cv2.namedWindow(title, cv2.WINDOW_NORMAL)
     cv2.imshow(title, img)
@@ -63,6 +69,7 @@ def get_file_type(file_path: str) -> str:
         Returns:
             str: The file type.
     """
+    logger.info("get_file_type: Getting file type.")
     _, file_extension = os.path.splitext(file_path)
     if file_extension.lower() in VIDEO_TYPES:
         return FileTypes.VIDEO.value
@@ -82,11 +89,12 @@ def draw_on_frame(img: np.ndarray, objects: List[BaseObjectModel] = None, offset
         Returns:
             np.ndarray: The new annotated image.
     """
+    logger.info("draw_on_frame: Drawing on frame.")
     if not objects: return img
     for obj in objects:
         x, y, w, h = int(obj.x), int(obj.y), int(obj.width), int(obj.height)
         cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
-        cv2.putText(img, f"{obj.classLabel} {obj.classId} - {obj.confidence:.2f}", (x+offset_x, y-offset_y), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
+        cv2.putText(img, f"{obj.classLabel} {obj.classId} - {obj.confidence:.2f}", (x+offset_x, y-offset_y), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 1)
     return img
 
 def draw_on_image(file_path: str, image_process_model: ImageProcessModel, output_dir: str = "./data/output") -> str:
@@ -98,6 +106,7 @@ def draw_on_image(file_path: str, image_process_model: ImageProcessModel, output
         Returns:
             str: The path to the new annotated image.
     """
+    logger.info("draw_on_image: Drawing on image.")
     img = cv2.imread(file_path)
     img = draw_on_frame(img, image_process_model.objects)
     os.makedirs(output_dir, exist_ok=True)
@@ -114,6 +123,7 @@ def draw_on_video(file_path: str, video_process_model: VideoProcessModel, output
         Returns:
             str: The path to the new annotated video.
     """
+    logger.info("draw_on_video: Drawing on video.")
     video = cv2.VideoCapture(file_path)
     if not video.isOpened():
         raise RuntimeError(f"Failed to open video: {file_path}")
@@ -144,6 +154,7 @@ def get_image_stats(image_process_model: ImageProcessModel) -> dict:
         Returns:
             dict: The image stats.
     """
+    logger.info("get_image_stats: Getting image stats.")
     total_objects = len(image_process_model.objects)
     source_width = image_process_model.source_width
     source_height = image_process_model.source_height
@@ -167,12 +178,12 @@ def get_video_stats(video_process_model: VideoProcessModel) -> dict:
         Returns:
             dict: The video stats.
     """
+    logger.info("get_video_stats: Getting video stats.")
     info = {}
     for idx, frame in enumerate(video_process_model.frames):
         info[f"Frame {idx}"] = {}
         info[f"Frame {idx}"]["Frame number"] = idx
         info[f"Frame {idx}"].update(get_image_stats(frame))
-
     return pd.DataFrame(info.values())
 
 def get_detailed_video_stats(raw_video_stats: pd.DataFrame) -> dict:
@@ -183,6 +194,7 @@ def get_detailed_video_stats(raw_video_stats: pd.DataFrame) -> dict:
         Returns:
             dict: The detailed video stats.
     """
+    logger.info("get_detailed_video_stats: Getting detailed video stats.")
     return {
         "Total frames processed": len(raw_video_stats),
         "Unique categories found": ' , '.join(raw_video_stats["Unique categories"].unique().tolist())

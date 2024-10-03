@@ -1,0 +1,30 @@
+###################################################################################################
+# Define a logger for the project here. This logger will be used to log all the information
+# and errors during the execution of the project.
+###################################################################################################
+
+import os
+import logging
+from datetime import datetime
+from rich.logging import RichHandler
+
+
+def __setup_logger__(log_dir: str = "/tmp/eyepopai/logs", level: int = logging.INFO) -> None:
+    """
+    Setup the logger for the project. The logs will be saved in the specified directory.
+    Input parameters:
+        - log_dir: directory where the logs will be saved.
+    Output:
+        - None
+    """
+    os.makedirs(log_dir, exist_ok=True)
+    log_filename = os.path.join(
+        log_dir, f"{datetime.now().strftime('log_%Y-%m-%d_%H-%M-%S')}.log")
+    logging.basicConfig(
+        level=level,
+        format="[%(levelname)s] || %(asctime)s || %(name)s || %(message)s",
+        handlers=[
+            logging.FileHandler(log_filename),
+            RichHandler()
+        ]
+    )
